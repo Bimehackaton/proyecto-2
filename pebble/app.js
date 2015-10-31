@@ -7,6 +7,106 @@ var ajax = require ('ajax');
 var Vector2 = require('vector2');
 var Vibe = require('ui/vibe');
 
+var accionPalmasCard = new UI.Card({
+    title: 'Ahora...',
+    banner: 'images/aplaudir.png'
+});
+accionPalmasCard.hide();
+
+var accionSaltarCard = new UI.Card({
+    title: 'Ahora...',
+    banner: 'images/salto.png'
+});
+accionSaltarCard.hide();
+
+var accionAgacharCard = new UI.Card({
+    title: 'Ahora...',
+    banner: 'images/brazosarriba.png'
+});
+accionAgacharCard.hide();
+
+var accionIzdaCard = new UI.Card({
+    title: 'Ahora...',
+    banner: 'images/izda.png'
+});
+accionIzdaCard.hide();
+
+var accionDchaCard = new UI.Card({
+    title: 'Ahora...',
+    banner: 'images/derecha.png'
+    
+});
+accionAgacharCard.hide();
+
+
+var jsonFunc= function(json) {
+  console.log('ejecucion: ' + json.accion);
+ 
+  if (json.accion==1) {
+    console.log('Saltar');
+    accionSaltarCard.show();
+    accionAgacharCard.hide();
+    accionIzdaCard.hide();
+    accionDchaCard.hide();
+    accionPalmasCard.hide();
+    Vibe.vibrate('long');
+  }
+  if (json.accion==2) {
+
+    console.log('Agachar');
+    accionSaltarCard.hide();
+    accionAgacharCard.show();
+    accionIzdaCard.hide();
+    accionDchaCard.hide();
+    accionPalmasCard.hide();
+    Vibe.vibrate('short');
+  }
+  if (json.accion==3) {
+    console.log('Izda');
+    accionSaltarCard.hide();
+    accionAgacharCard.hide();
+    accionIzdaCard.show();
+    accionDchaCard.hide();
+    accionPalmasCard.hide();
+    Vibe.vibrate('double');
+  }
+  if (json.accion==4) {
+    console.log('Dcha');
+    accionSaltarCard.hide();
+    accionAgacharCard.hide();
+    accionIzdaCard.hide();
+    accionDchaCard.show();
+    accionPalmasCard.hide();
+    Vibe.vibrate('double');
+    Vibe.vibrate('long');
+  }  
+  if (json.accion==5) {
+    console.log('Palmas');
+    accionSaltarCard.hide();
+    accionAgacharCard.hide();
+    accionIzdaCard.hide();
+    accionDchaCard.hide();
+    accionPalmasCard.show();
+    Vibe.vibrate('double');
+    Vibe.vibrate('short');
+  }  
+  if (json.accion==6) {
+    console.log('Nada');
+    accionSaltarCard.hide();
+    accionAgacharCard.hide();
+    accionIzdaCard.hide();
+    accionDchaCard.hide();
+    accionPalmasCard.hide();
+  }  
+};
+
+
+var jsonErrFunc = function(error) {
+    console.log('Ajax failed: ' + error);
+};
+
+
+
 var llamarAjax = function() {
 //  var URL = 'https://qrng.anu.edu.au/API/jsonI.php?length=1&type=uint8';
   var URL = 'http://10.10.2.11:8080/api/acciondj';
@@ -76,108 +176,6 @@ window.on('click', 'select', cuernosFunc);
 
 // Show the Window
 window.show();
-
-
-
-
-var accionPalmasCard = new UI.Card({
-    title: 'Ahora...',
-    banner: 'images/aplaudir.png'
-});
-accionPalmasCard.hide();
-
-var accionSaltarCard = new UI.Card({
-    title: 'Ahora...',
-    banner: 'images/salto.png'
-});
-accionSaltarCard.hide();
-
-var accionAgacharCard = new UI.Card({
-    title: 'Ahora...',
-    banner: 'images/brazosarriba.png'
-});
-accionAgacharCard.hide();
-
-var accionIzdaCard = new UI.Card({
-    title: 'Ahora...',
-    banner: 'images/izda.png'
-});
-accionIzdaCard.hide();
-
-var accionDchaCard = new UI.Card({
-    title: 'Ahora...',
-    banner: 'images/derecha.png'
-    
-});
-accionAgacharCard.hide();
-
-var jsonFunc= function(json) {
-  console.log('ejecucion: ' + json.accion);
- //if (json.data[0]<50) {
-  if (json.accion==1) {
-    console.log('Saltar');
-    accionSaltarCard.show();
-    accionAgacharCard.hide();
-    accionIzdaCard.hide();
-    accionDchaCard.hide();
-    accionPalmasCard.hide();
-    Vibe.vibrate('long');
-  }
-  if (json.accion==2) {
-//  if (json.data[0]>50 && json.data[0]<100) {
-    console.log('Agachar');
-    accionSaltarCard.hide();
-    accionAgacharCard.show();
-    accionIzdaCard.hide();
-    accionDchaCard.hide();
-    accionPalmasCard.hide();
-    Vibe.vibrate('short');
-  }
-  if (json.accion==3) {
-    console.log('Izda');
-    accionSaltarCard.hide();
-    accionAgacharCard.hide();
-    accionIzdaCard.show();
-    accionDchaCard.hide();
-    accionPalmasCard.hide();
-    Vibe.vibrate('double');
-  }
-  if (json.accion==4) {
-    console.log('Dcha');
-    accionSaltarCard.hide();
-    accionAgacharCard.hide();
-    accionIzdaCard.hide();
-    accionDchaCard.show();
-    accionPalmasCard.hide();
-    Vibe.vibrate('double');
-    Vibe.vibrate('long');
-  }  
-  if (json.accion==5) {
-    console.log('Palmas');
-    accionSaltarCard.hide();
-    accionAgacharCard.hide();
-    accionIzdaCard.hide();
-    accionDchaCard.hide();
-    accionPalmasCard.show();
-    Vibe.vibrate('double');
-    Vibe.vibrate('short');
-  }  
-  if (json.accion==6) {
-    console.log('Nada');
-    accionSaltarCard.hide();
-    accionAgacharCard.hide();
-    accionIzdaCard.hide();
-    accionDchaCard.hide();
-    accionPalmasCard.hide();
-  }  
-};
-
-
-var jsonErrFunc = function(error) {
-    console.log('Ajax failed: ' + error);
-};
-
-
 
 setInterval (llamarAjax, 2000);
 
