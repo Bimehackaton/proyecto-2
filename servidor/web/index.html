@@ -47,13 +47,42 @@
             {
                 width: 100%;
             }
-            .arriba
+            
+            .arriba, .abajo, .izquierda, .derecha, .disparo1, .disparo2
             {
-                background-color: lightskyblue;
-                background-image: url('img/salto.png');
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position: center;
+            }
+            
+            .arriba
+            {
+                background-image: url('img/salto.png');
+            }
+            
+            .abajo
+            {
+                background-image: url('img/brazosarriba.png');
+            }
+            
+            .izquierda
+            {
+                background-image: url('img/izda.png');
+            }
+            
+            .derecha
+            {
+                background-image: url('img/derecha.png');
+            }
+            
+            .disparo1
+            {
+                background-image: url('img/aplaudir.png');
+            }
+            
+            .disparo2
+            {
+                background: none;
             }
         </style>
         
@@ -71,20 +100,39 @@
                         
                         datos = $.parseJSON(json);
                         
+                        var capa = $('#pantalla');
+                        capa.html(datos.mola + "," + datos.cuernos + "," + datos.nomola + "," + datos.accion);
+                        /*
                         $('#derecha').html(datos.mola);
                         $('#centro').html(datos.cuernos);
                         $('#izquierda').html(datos.nomola);
                         $('#abajo').html(datos.accion);
+                        */
                         
-                        var capa = $('#pantalla');
                         
-                        /*
+                        
                         switch(datos.accion)
                         {
                             case 1:
-                                capa.addClass();
+                                capa.attr('class', 'arriba');
+                                break;
+                            case 2:
+                                capa.attr('class', 'abajo');
+                                break;
+                            case 3:
+                                capa.attr('class', 'izquierda');
+                                break;
+                            case 4:
+                                capa.attr('class', 'derecha');
+                                break;
+                            case 5:
+                                capa.attr('class', 'disparo1');
+                                break;
+                            case 6:
+                                capa.attr('class', 'disparo2');
+                                break;
                         }
-                        */
+                        
                         setTimeout(update, 100);
                     });
             }
