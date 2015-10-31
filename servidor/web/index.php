@@ -69,4 +69,15 @@ $app->get('/api/acciondj', function() use($faccion) {
     return '{ "accion" : '.$accion.' }';
 });
 
+/*$app->get('/{fichero}', function($fichero) use($app, $findex) {
+    return $app->sendFile(__DIR__."/".$fichero); 
+});*/
+
+$filename = __DIR__.preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']);
+if (php_sapi_name() === 'cli-server' && is_file($filename)) {
+    return false;
+}
+
+//$app = require __DIR__.'/../src/app.php';
 $app->run();
+
