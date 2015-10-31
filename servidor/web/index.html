@@ -4,114 +4,157 @@
         <title>DJnator</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <style>
             html, body, #pantalla
             {
                 width: 100%;
                 height: 100%;
+                /*transition: background-color 2s;*/
             }
-            
+
             .arriba, .abajo, .izquierda, .derecha, .disparo1, .disparo2
             {
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position: center;
             }
-            
+
             .arriba
             {
                 background-image: url('img/salto.png');
             }
-            
+
             .abajo
             {
                 background-image: url('img/brazosarriba.png');
             }
-            
+
             .izquierda
             {
                 background-image: url('img/izda.png');
             }
-            
+
             .derecha
             {
                 background-image: url('img/derecha.png');
             }
-            
+
             .disparo1
             {
                 background-image: url('img/aplaudir.png');
             }
-            
+
             .disparo2
             {
                 background: none;
             }
         </style>
-        
+
         <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
         <script>
             $(function () {
                 update();
             });
+            
+            var cuernos = 0;
+            
             function update()
             {
                 $.ajax({
-                        url: "http://10.10.2.11:8080/api/getdj",
-                        context: document.body
-                    }).done(function (json) {
-                        
-                        datos = $.parseJSON(json);
-                        
-                        var capa = $('#pantalla');
-                        capa.html(datos.mola + "," + datos.cuernos + "," + datos.nomola + "," + datos.accion);
-                        
-                        switch(datos.accion)
-                        {
-                            case 1:
-                                capa.attr('class', 'arriba');
-                                break;
-                            case 2:
-                                capa.attr('class', 'abajo');
-                                break;
-                            case 3:
-                                capa.attr('class', 'izquierda');
-                                break;
-                            case 4:
-                                capa.attr('class', 'derecha');
-                                break;
-                            case 5:
-                                capa.attr('class', 'disparo1');
-                                break;
-                            case 6:
-                                capa.attr('class', 'disparo2');
-                                break;
-                        }
-                        
-                        var totalvotos = datos.mola + datos.nomola;
-                        var diferencia =0;
-                        var valor = 0;
-                        var color = 00;
-                        if (datos.mola > datos.nomola) {
-                            diferencia = datos.mola - datos.nomola;
-                            valor = 256-Math.round((diferencia / totalvotos) * 256);
-                            color = "rgb(" + valor + ",255," + valor + ")";
-                        } else {
-                            diferencia = datos.nomola - datos.mola;
-                            valor = 256-Math.round((diferencia / totalvotos) * 256);
-                            color = "rgb(255," + valor + "," + valor + ")";
-                        }
-                        
-                        capa.html(datos.mola + "," + datos.cuernos + "," + datos.nomola + "," + datos.accion + 
-                                " totalvotos:" + totalvotos + " diferencia:" + diferencia + " valor:" + valor + 
-                                color);
-                        
-                        capa.css('background-color',color);
+                    url: "http://10.10.2.11:8080/api/getdj",
+                    context: document.body
+                }).done(function (json) {
 
+                    datos = $.parseJSON(json);
+
+                    var capa = $('#pantalla');
+                    capa.html(datos.mola + "," + datos.cuernos + "," + datos.nomola + "," + datos.accion);
+
+                    switch (datos.accion)
+                    {
+                        case 1:
+                            capa.attr('class', 'arriba');
+                            break;
+                        case 2:
+                            capa.attr('class', 'abajo');
+                            break;
+                        case 3:
+                            capa.attr('class', 'izquierda');
+                            break;
+                        case 4:
+                            capa.attr('class', 'derecha');
+                            break;
+                        case 5:
+                            capa.attr('class', 'disparo1');
+                            break;
+                        case 6:
+                            capa.attr('class', 'disparo2');
+                            break;
+                    }
+
+                    var totalvotos = datos.mola + datos.nomola;
+                    var diferencia = 0;
+                    var valor = 0;
+                    var color = 00;
+                    if (datos.mola > datos.nomola) {
+                        diferencia = datos.mola - datos.nomola;
+                        valor = 256 - Math.round((diferencia / totalvotos) * 256);
+                        color = "rgb(" + valor + ",255," + valor + ")";
+                    } else {
+                        diferencia = datos.nomola - datos.mola;
+                        valor = 256 - Math.round((diferencia / totalvotos) * 256);
+                        color = "rgb(255," + valor + "," + valor + ")";
+                    }
+
+                    capa.html(datos.mola + "," + datos.cuernos + "," + datos.nomola + "," + datos.accion +
+                            " totalvotos:" + totalvotos + " diferencia:" + diferencia + " valor:" + valor +
+                            color);
+
+                    capa.css('background-color', color);
+                    /*
+                    setTimeout(
+                        function()
+                        {
+                            capa.css('background-color', "rgb(255,"+(valor-50)+","+(valor-50)+")")
+                        },1000
+                    );
+                    setTimeout(
+                        function()
+                        {
+                            capa.css('background-color', color)
+                        },1000
+                    );
+                    */
+                    
+                    //CUERNOS
+                    if (datos.cuernos > cuernos)
+                    {
+                        for (var n = 0; n < datos.cuernos - cuernos; n++)
+                        {
+                            var cuerno = $("<img class='cuerno' src='img/cuernos.jpg' style='position: fixed'/>");
+                            capa.append(cuerno);
+                        }
                         
-                        setTimeout(update, 100);
-                    });
+                        $('.cuerno').each(function(idx, cuerno) {
+                                var $cuerno = $(cuerno);
+                                
+                                $cuerno.animate({
+                                    opacity: 0.25,
+                                    bottom: "+="+Math.abs(Math.random()*100)+"%",
+                                    left: (Math.random()*100)-50
+                                }, { 
+                                    duration: 3000,
+                                    queue: false
+                                });
+                            }
+                        );
+                        
+                        cuernos = datos.cuernos;
+                    }
+                });
+
+                setTimeout(update, 3000);
             }
         </script>
     </head>
