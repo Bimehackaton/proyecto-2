@@ -11,42 +11,6 @@
                 width: 100%;
                 height: 100%;
             }
-            div
-            {
-                position: fixed;
-                width: 25%;
-                float:left;
-                font-size: 5em;
-                text-align: center;
-            }
-            #pantalla
-            {
-                position: relative;
-                z-index: -1;
-            }
-            /*
-            #izquierda
-            {
-                background: red;
-            }
-            #centro
-            {
-                background: yellow;
-            }
-            #derecha
-            {
-                background: green;
-            }
-            
-            #abajo
-            {
-                width: 100%;
-                background: lightgray;
-            }*/
-            #pantalla
-            {
-                width: 100%;
-            }
             
             .arriba, .abajo, .izquierda, .derecha, .disparo1, .disparo2
             {
@@ -102,14 +66,6 @@
                         
                         var capa = $('#pantalla');
                         capa.html(datos.mola + "," + datos.cuernos + "," + datos.nomola + "," + datos.accion);
-                        /*
-                        $('#derecha').html(datos.mola);
-                        $('#centro').html(datos.cuernos);
-                        $('#izquierda').html(datos.nomola);
-                        $('#abajo').html(datos.accion);
-                        */
-                        
-                        
                         
                         switch(datos.accion)
                         {
@@ -133,24 +89,33 @@
                                 break;
                         }
                         
+                        var totalvotos = datos.mola + datos.nomola;
+                        var diferencia =0;
+                        var valor = 0;
+                        var color = 00;
+                        if (datos.mola > datos.nomola) {
+                            diferencia = datos.mola - datos.nomola;
+                            valor = 256-Math.round((diferencia / totalvotos) * 256);
+                            color = "rgb(" + valor + ",255," + valor + ")";
+                        } else {
+                            diferencia = datos.nomola - datos.mola;
+                            valor = 256-Math.round((diferencia / totalvotos) * 256);
+                            color = "rgb(255," + valor + "," + valor + ")";
+                        }
+                        
+                        capa.html(datos.mola + "," + datos.cuernos + "," + datos.nomola + "," + datos.accion + 
+                                " totalvotos:" + totalvotos + " diferencia:" + diferencia + " valor:" + valor + 
+                                color);
+                        
+                        capa.css('background-color',color);
+
+                        
                         setTimeout(update, 100);
                     });
             }
         </script>
     </head>
     <body>
-        <div id="izquierda">
-            &nbsp;
-        </div>
-        <div id="centro">
-            &nbsp;
-        </div>
-        <div id="derecha">
-            &nbsp;
-        </div>
-        <div id="abajo">
-            &nbsp;
-        </div>
         <div id="pantalla" class="arriba">
             &nbsp;
         </div>
