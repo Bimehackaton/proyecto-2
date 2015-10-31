@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DJnator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <style>
+            div
+            {
+                width: 33%;
+                float:left;
+                font-size: 5em;
+                text-align: center;
+            }
+            #izquierda
+            {
+                background: red;
+            }
+            #centro
+            {
+                background: yellow;
+            }
+            #derecha
+            {
+                background: green;
+            }
+            #abajo
+            {
+                width: 100%;
+                background: lightgray;
+            }
+        </style>
+        
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script>
+            $(function () {
+                update();
+            });
+            function update()
+            {
+                $.ajax({
+                        url: "http://10.10.2.11:8080/api/getdj",
+                        context: document.body
+                    }).done(function (json) {
+                        //$(this).addClass("done");
+                        datos = $.parseJSON(json);
+                        $('#derecha').html(datos.mola);
+                        $('#centro').html(datos.cuernos);
+                        $('#izquierda').html(datos.nomola);
+                        $('#abajo').html(datos.accion);
+                        
+                        setTimeout(update, 100);
+                    });
+            }
+        </script>
+    </head>
+    <body>
+        <div id="izquierda">
+            &nbsp;
+        </div>
+        <div id="centro">
+            &nbsp;
+        </div>
+        <div id="derecha">
+            &nbsp;
+        </div>
+        <div id="abajo">
+            &nbsp;
+        </div>
+    </body>
+</html>
