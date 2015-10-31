@@ -49,18 +49,53 @@
             {
                 background: none;
             }
+            body {
+                padding: 20px;
+            }
+            #search-form, .form-control {
+                margin-bottom: 20px;
+            }
+            .cover {
+                width: 300px;
+                height: 300px;
+                display: inline-block;
+                background-size: cover;
+            }
+            .coverHide {
+                width: 300px;
+                height: 300px;
+                display: none;
+                background-size: cover;
+                visibility: hidden;
+            }
+            .cover:hover {
+                cursor: pointer;
+            }
+            .cover.playing {
+                border: 5px solid #e45343;
+            }
+            
+            .container {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                float: right;
+            }
         </style>
 
         <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="handlebars.min.js"></script>
         <script>
             var ancho;
             $(function () {
                 ancho = $(document).width();
+                spotify();
                 update();
+
             });
-            
+
             var cuernos = 0;
-            
+
             function update()
             {
                 $.ajax({
@@ -115,49 +150,92 @@
 
                     capa.css('background-color', color);
                     /*
-                    setTimeout(
-                        function()
-                        {
-                            capa.css('background-color', "rgb(255,"+(valor-50)+","+(valor-50)+")")
-                        },1000
-                    );
-                    setTimeout(
-                        function()
-                        {
-                            capa.css('background-color', color)
-                        },1000
-                    );
-                    */
-                    
+                     setTimeout(
+                     function()
+                     {
+                     capa.css('background-color', "rgb(255,"+(valor-50)+","+(valor-50)+")")
+                     },1000
+                     );
+                     setTimeout(
+                     function()
+                     {
+                     capa.css('background-color', color)
+                     },1000
+                     );
+                     */
+
                     //CUERNOS
                     if (datos.cuernos > cuernos)
                     {
                         for (var n = 0; n < datos.cuernos - cuernos; n++)
                         {
                             var cuerno = $("<img class='cuerno' src='img/cuernos.png' style='position: fixed; height: 20%; width: 20%;'/>");
-                            $(cuerno).css('left', Math.random()*ancho);
+                            $(cuerno).css('left', Math.random() * ancho);
                             capa.append(cuerno);
                         }
-                        
-                        $('.cuerno').each(function(idx, cuerno) {
-                                var $cuerno = $(cuerno);
-                                
-                                $cuerno.animate({
-                                    opacity: 0.0,
-                                    bottom: "+="+Math.abs(Math.random()*100)+"%",
-                                    left: (Math.random()*ancho)
-                                }, { 
-                                    duration: 3000,
-                                    queue: false
-                                });
-                            }
+
+                        $('.cuerno').each(function (idx, cuerno) {
+                            var $cuerno = $(cuerno);
+
+                            $cuerno.animate({
+                                opacity: 0.0,
+                                bottom: "+=" + Math.abs(Math.random() * 100) + "%",
+                                left: (Math.random() * ancho)
+                            }, {
+                                duration: 3000,
+                                queue: false
+                            });
+                        }
                         );
-                        
+
                         cuernos = datos.cuernos;
                     }
                 });
 
                 setTimeout(update, 3000);
+            }
+
+            // find template and compile it
+            function spotify()
+            {
+                var resultsPlaceholder = document.getElementById('results'),
+                        templateSourceBIME = document.getElementById('bimetracks-template').innerHTML,
+                        template2 = Handlebars.compile(templateSourceBIME),
+                        playingCssClass = 'playing',
+                        audioObject = null;
+
+                var playBIME = function () {
+                    $.ajax({
+                        url: 'https://api.spotify.com/v1/tracks/?ids=4znKp61MTtp04IvAnmtX40,7y8aVfDkqt6qirGNivvs0M,0RchWnEHETINMAyrTrlBmo,0ahOkCowJzgyrkoB1HJLPY,2gUSIsapdX6jEJ0DvjqTt2,2Oehrcv4Kov0SuIgWyQY9e,4St0bvXjgF9YiVfgRorHmK,6iWwfN1euztxZi1OK38HbU,0mh7eTsBmQj29bkgpQKoPj',
+                        data: {
+                        },
+                        success: function (response) {
+                            resultsPlaceholder.innerHTML = template2(response);
+                            //bucle con Each
+                            var currentTrack = $('#results div:first-child');
+                            currentTrack.removeClass('coverHide').addClass('cover');
+                            audioObject = new Audio(currentTrack.attr('preview_url'));
+                            audioObject.play();
+                            currentTrack.addClass(playingCssClass);
+                            audioObject.addEventListener('ended', function () {
+                                currentTrack.removeClass('cover').addClass('coverHide');
+                            });
+                            var artist = document.getElementById("artist");
+                            artist.firstChild.nodeValue =
+                                    currentTrack.attr('artistName');
+                            var song = document.getElementById("song");
+                            song.firstChild.nodeValue =
+                                    currentTrack.attr('trackName');
+                        }
+                    });
+                };
+
+                document.getElementById("mostrar").addEventListener("click", function (e) {
+                    e.preventDefault();
+                    playBIME();
+                }, false);
+
+                //playBIME()
             }
         </script>
     </head>
@@ -165,5 +243,20 @@
         <div id="pantalla" class="arriba">
             &nbsp;
         </div>
+        <div class="container">
+            <form id="search-form">
+                <input type="submit" id="mostrar" class="btn btn-primary" value="Mostrar BIME">
+            </form>
+            <table id="playdata">   
+                <tr><td id="artist">&nbsp;</td></tr>   
+                <tr><td id="song">&nbsp;</td></tr>   
+            </table>
+            <div id="results"></div>
+        </div>
+        <script id="bimetracks-template" type="text/x-handlebars-template">
+            {{#each tracks}}
+            <div style="background-image:url({{album.images.0.url}})" data-album-id="{{album.id}}" preview_url="{{preview_url}}" artistName="{{artists.0.name}}" trackName="{{name}}" class="coverHide"></div>
+            {{/each}}
+        </script>
     </body>
 </html>
